@@ -7,31 +7,26 @@ marca = "True"
 categorias = ["camisetas", "buzos-y-chaquetas", "pantalones-y-sudaderas", "croptops", "bikers-y-shorts", "gorras-y-accesorios"]
 fecha = date.today().strftime("%Y%m%d")
 
-with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v97_win32/chromedriver.exe") as driver:
+with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v104_win32/chromedriver.exe") as driver:
     for categoria in categorias:
-        prod_json = "Marca| Sección| Categoría| Producto| Precio original| Precio reventa| Vínculo| Imagen|\n"
+        prod_json = "Marca| Sección| Categoría| Producto| Precio original| Vínculo| Imagen|\n"
         driver.get(f"https://www.trueshop.co/collections/{categoria}")
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(10)
-        for productos in driver.find_elements(by=By.CLASS_NAME, value="product-inner"):
+        for i in range(110):
+            driver.execute_script("window.scrollTo(0, window.scrollY + 600);")
+            time.sleep(1)
+        for productos in driver.find_elements(by=By.CLASS_NAME, value="grid-view-item"):
             producto_html = productos.find_element(by=By.CLASS_NAME, value="slick-active")
-            item = producto_html.find_element(by=By.TAG_NAME, value="a")
-            item_link = item.get_attribute("href")
+            # item = producto_html.find_element(by=By.TAG_NAME, value="a")
+            item_link = producto_html.get_attribute("href")
             item = producto_html.find_element(by=By.TAG_NAME, value="img")
             link_img = item.get_attribute("src")
-            producto_html = productos.find_element(by=By.CLASS_NAME, value="product-info")
-            item = producto_html.find_element(by=By.TAG_NAME, value="h3")
-            producto = item.text
-            try:
-                item = producto_html.find_element(by=By.TAG_NAME, value="ins")
-            except:
-                item = producto_html.find_element(by=By.CLASS_NAME, value="price")
-
-            try:
-                precio = float(((item.text).replace(".", "")).replace("$", ""))
-            except:
-                precio = float(((item.text).replace(",", "")).replace("$", ""))
-            precio_resell = float(precio*1.1)
+            producto_html = productos.find_element(by=By.CLASS_NAME, value="details")
+            producto = producto_html.text
+            item = producto_html.find_element(by=By.CLASS_NAME, value="product-price__price")
+            precio = float(((item.text).replace(".", "")).replace("$", ""))
+            #except:
+            #    precio = float(((item.text).replace(",", "")).replace("$", ""))
+            #precio_resell = float(precio*1.1)
             if categoria == "camisetas":
                 re_categoria = "CAMISETA"
                 if producto.lower().find("mesh") > 0:
@@ -102,7 +97,7 @@ with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v97_win32/c
                 print(categoria)
 
             for seccion in secciones:
-                prod_json = prod_json + f"{marca}| {seccion}| {re_categoria}| {producto}| {precio}| {precio_resell}| {item_link}| {link_img}|\n"
+                prod_json = prod_json + f"{marca}| {seccion}| {re_categoria}| {producto}| {precio}| {item_link}| {link_img}|\n"
 
         with open(f"{fecha}_{categoria}_{marca}.csv", "w") as docu:
             docu.write(prod_json)
