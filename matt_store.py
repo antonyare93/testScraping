@@ -9,7 +9,7 @@ fecha = date.today().strftime("%Y%m%d")
 
 with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v104_win32/chromedriver.exe") as driver:
     for seccion in secciones:
-        prod_json = "Marca| Sección| Categoría| Producto| Precio original| Precio reventa| Vínculo| Imagen|\n"
+        prod_json = "Marca| Sección| Categoría| Producto| Precio original| Vínculo| Imagen|\n"
         driver.get(f"https://www.mattelsa.net/{seccion}")
         for i in range(110):
             driver.execute_script("window.scrollTo(0, window.scrollY + 600);")
@@ -26,8 +26,8 @@ with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v104_win32/
             producto = item_link[-(len(item_link)-(len(driver.current_url)+1)):]
             item = productos.find_element(by=By.CLASS_NAME, value="price-wrapper")
             precio = int(item.get_attribute("data-price-amount"))
-            precio_resell = int(precio*1.1)
-            prod_json = prod_json + f"{marca}| {seccion}| {categoria}| {producto}| {precio}| {precio_resell}| {item_link}| {link_img}|\n"
+            #precio_resell = int(precio*1.1)
+            prod_json = prod_json + f"{marca}| {seccion}| {categoria}| {producto}| {precio}| {item_link}| {link_img}|\n"
 
         with open(f"{fecha}_{seccion}_{marca}.csv", "w") as docu:
             docu.write(prod_json)
