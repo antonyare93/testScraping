@@ -7,7 +7,7 @@ marca = "Mattelsa"
 secciones = ["mujer", "hombre", "cosas", "sale/hombre", "sale/mujer"]
 fecha = date.today().strftime("%Y%m%d")
 
-with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v100_win32/chromedriver.exe") as driver:
+with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v104_win32/chromedriver.exe") as driver:
     for seccion in secciones:
         prod_json = "Marca| Sección| Categoría| Producto| Precio original| Precio reventa| Vínculo| Imagen|\n"
         driver.get(f"https://www.mattelsa.net/{seccion}")
