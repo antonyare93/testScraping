@@ -22,8 +22,8 @@ with webdriver.Chrome(executable_path="C:/WebDriver/bin/chromedriver_v104_win32/
             item_link = item.get_attribute("href")
             item = productos.find_element(by=By.CLASS_NAME, value="first-product-name")
             categoria = item.text
-            item = productos.find_element(by=By.CLASS_NAME, value="last-product-name")
-            producto = item.text
+            # item = productos.find_element(by=By.CLASS_NAME, value="last-product-name")
+            producto = item_link[-(len(item_link)-(len(driver.current_url)+1)):]
             item = productos.find_element(by=By.CLASS_NAME, value="price-wrapper")
             precio = int(item.get_attribute("data-price-amount"))
             precio_resell = int(precio*1.1)
